@@ -5,35 +5,20 @@ const http = require('https')
 //must set maxsocket, otherwise will get err
 http.globalAgent.maxSockets = 100
 const query = require('./cheerio')
+
+/*
+step 1: 
+just go to the website of 'https://www.biquge.com.cn'
+and find a novel which you want to download.
+then,replace the titleUrl to website page url  below
+
+step 2: npm i 
+
+step 3: node index.js
+ */
 const titleUrl = 'https://www.biquge.com.cn/book/23488/'
 
-
-// const urlList = [
-// 	'https://www.biquge.com.cn/book/31833/489366.html',
-// 	'https://www.biquge.com.cn/book/31833/489624.html',
-// 	'https://www.biquge.com.cn/book/31833/725924.html',
-// 	'https://www.biquge.com.cn/book/31833/728234.html',
-// 	'https://www.biquge.com.cn/book/31833/728644.html',
-// 	'https://www.biquge.com.cn/book/31833/728814.html',
-// 	'https://www.biquge.com.cn/book/31833/730288.html',
-// 	'https://www.biquge.com.cn/book/31833/730733.html',
-// 	'https://www.biquge.com.cn/book/31833/732474.html',
-// 	'https://www.biquge.com.cn/book/31833/732939.html',
-// 	'https://www.biquge.com.cn/book/31833/734834.html',
-// 	'https://www.biquge.com.cn/book/31833/735310.html',
-// 	'https://www.biquge.com.cn/book/31833/736959.html',
-// 	'https://www.biquge.com.cn/book/31833/737389.html',
-// 	'https://www.biquge.com.cn/book/31833/739157.html',
-// 	'https://www.biquge.com.cn/book/31833/739595.html',
-// 	'https://www.biquge.com.cn/book/31833/741234.html',
-// 	'https://www.biquge.com.cn/book/31833/741627.html',
-// 	'https://www.biquge.com.cn/book/31833/743264.html',
-// 	'https://www.biquge.com.cn/book/31833/743699.html',
-// 	'https://www.biquge.com.cn/book/31833/745359.html',
-// 	'https://www.biquge.com.cn/book/31833/745771.html',
-// ]
-
-//请求章节目录函数
+//get chapter table
 function getTitle(urlTitle) {
 	return new Promise((resolve, reject) => {
 		http.get(urlTitle, (res) => {
@@ -50,7 +35,7 @@ function getTitle(urlTitle) {
 	})
 }
 
-// sent request,get every chapters data
+// sent request,get every chapters url
 function sentReq(url) {
 	return new Promise((resolve, reject) => {
 		request(url, function (err, res, body) {
@@ -81,8 +66,7 @@ getTitle(titleUrl).then((value) => {
 	//返回值是每个章节的请求地址
 	// console.log(value)
 	let urlList = query(value)
-  // console.log(urlList)
-  
+	// console.log(urlList)
 
 	//use map() method to keep sent request
 	let contentArr = urlList.map((x) => {
@@ -93,18 +77,15 @@ getTitle(titleUrl).then((value) => {
 	//let all requestes are come back in order
 	Promise.all(contentArr)
 		.then((value) => {
-      console.log(value)
-      for (let i = 0; i < value.length; i++) {
-        fs.appendFileSync(
-					'shenxu.txt',
+			console.log(value)
+			for (let i = 0; i < value.length; i++) {
+				fs.appendFileSync(
+					'noval.txt',
 					`|=>|=>|=>|=>|${value[i].chapterTitle}=>${value[i].content}`
 				)
-        
-      }
+			}
 		})
 		.catch((err) => {
 			console.log(err)
-    })
-  
-  
+		})
 })
