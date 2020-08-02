@@ -1,0 +1,15 @@
+{
+  "name": "practice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "hechuan li",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3"
+  }
+}
